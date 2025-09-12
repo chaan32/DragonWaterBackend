@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dragon Water 아이디 찾기 안내</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f8f9fa; font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕', Dotum, '돋움', sans-serif;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f8f9fa;">
+    <tr>
+        <td align="center" style="padding: 20px;">
+            <table class="container" width="600" border="0" cellspacing="0" cellpadding="0" style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid hsl(212, 25%, 88%);">
+                <tr>
+                    <td class="header" style="background-color: #1a3a6e; padding: 32px 24px; text-align: center;">
+                        <h2 class="logo-text" style="color: #ffffff; font-size: 28px; font-weight: bold; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Dragon Water</h2>
+                        <p class="logo-subtitle" style="color: rgba(255,255,255,0.9); font-size: 14px; margin: 8px 0 0 0; font-weight: normal;">수질의 혁신, 깨끗함의 기준</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="content" style="padding: 40px 32px; text-align: center; color: hsl(212, 100%, 12%);">
+                        <h1 style="font-size: 28px; color: hsl(212, 95%, 18%); margin-bottom: 20px; font-weight: 700;">아이디 찾기 완료</h1>
+                        <p style="font-size: 16px; line-height: 1.6; color: hsl(212, 15%, 50%); margin-bottom: 24px;">
+                            <span th:text="${name}">홍길동</span> 고객님, <br>
+                            요청하신 Dragon Water 회원 아이디를 보내드립니다.
+                        </p>
+
+                        <div class="auth-code-container" style="margin: 32px 0; padding: 20px; background-color: #e0f5ff; border-radius: 12px; border: 2px solid hsl(187, 85%, 53%);">
+                            <div class="auth-code-label" style="font-size: 14px; color: hsl(212, 95%, 18%); margin-bottom: 8px; font-weight: 600;">고객님 아이디</div>
+                            <div class="auth-code-box" th:text="${loginId}" style="display: inline-block; padding: 16px 32px; background-color: #ffffff; border-radius: 8px; font-size: 32px; font-weight: bold; color: hsl(212, 95%, 18%); letter-spacing: 2px; box-shadow: 0 4px 20px -4px hsla(187, 85%, 53%, 0.3); border: 1px solid hsl(187, 85%, 53%);">dragonwater123</div>
+                        </div>
+
+                        <div class="validity-notice" style="margin-top: 24px; padding: 16px; background-color: hsl(195, 100%, 96%); border-radius: 6px; border-left: 4px solid hsl(187, 85%, 53%);">
+                            <p style="margin: 0; font-size: 14px; color: hsl(212, 95%, 18%); font-weight: 500;">이제 기억하신 아이디로 로그인해보세요.</p>
+                        </div>
+
+                        <div class="security-notice" style="margin-top: 20px; padding: 16px; background-color: rgba(135, 226, 235, 0.1); border-radius: 6px; border: 1px solid hsl(187, 85%, 53%);">
+                            <p style="margin: 0; font-size: 13px; color: hsl(212, 95%, 18%);">
+                                🔒 <strong>보안을 위해</strong> 아이디를 타인과 공유하지 마세요.<br>
+                                본인이 요청하지 않은 메일이라면 무시하셔도 좋습니다.
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="footer" style="background-color: hsl(210, 40%, 96%); padding: 32px 24px; text-align: center; font-size: 12px; color: hsl(212, 15%, 50%);">
+                        <div class="company-info" style="margin-bottom: 12px; font-weight: 600; color: hsl(212, 95%, 18%);">© 2024 Dragon Company. All rights reserved.</div>
+                        <p style="margin-bottom: 8px; margin-top: 0;">
+                            이메일 인증 관련 문의: <a href="mailto:haechan8864@naver.com" style="color: hsl(212, 95%, 18%); text-decoration: none;">haechan8864@naver.com</a>
+                        </p>
+                        <p style="margin: 0;">
+                            Dragon Water는 혁신적인 솔루션과 서비스를 제공합니다.<br>
+                            함께 성장하고 도전하는 파트너가 되어보세요.
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

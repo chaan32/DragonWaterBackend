@@ -1,0 +1,57 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+
+# Env & secrets
+.env
+*.env
+*.env.*
+application-*.yml
+application-*.properties
+
+# Docker
+**/certbot/**
+**/letsencrypt/**
+
+cat > .gitignore <<'EOF'
+/build/
+/out/
+/target/
+/**/build/
+.gradle/
+!gradle/wrapper/**
+
+.idea/
+*.iml
+.vscode/
+
+.DS_Store
+*.log
+logs/
+
+*.jar
+*.war
+*.zip
+*.tar
+
+**/docker-cache/**
+**/.docker/
+
+.env
+*.pem
+*.key
+*.crt
+
+certbot/
+nginx/conf.d/*.pem
+nginx/conf.d/*.key
+EOF

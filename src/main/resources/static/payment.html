@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>결제 테스트 (기초)</title>
+    <!-- jQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <!-- 아임포트 라이브러리 -->
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+</head>
+<body>
+<h2>결제 테스트 (기초부터 다시하기)</h2>
+<p>버튼을 눌러 100원 결제를 테스트합니다.</p>
+<button onclick="requestPay()">결제하기</button>
+
+<script>
+    const IMP = window.IMP;
+    // ----------------------------------------------------------------
+    // 중요!!: 스크린샷의 실제 가맹점 식별코드로 교체했습니다.
+    IMP.init("imp32160652");
+    // ----------------------------------------------------------------
+
+    function requestPay() {
+        // 서버에 사전 검증 요청
+        $.ajax({
+            url: "http://localhost:8080/api/payment/validation",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                productId: "product-001",
+                amount: 100
+            })
+        }).done(function (data) {
+            const { merchant_uid, amount, productName } = data;
+
+            // 아임포트 결제창 호출
+            IMP.request_pay({
+                // ----------------------------------------------------------------
+                // 중요: 새로 등록하신 'html5_inicis'로 설정합니다.
+                pg: "html5_inicis",
+                // ----------------------------------------------------------------
+                pay_method: "card",
+                merchant_uid: merchant_uid,
+                name: productName,
+                amount: amount,
+                buyer_email: "test@test.com",
+                buyer_name: "테스트구매자"
+            }, function (rsp) {
+                if (rsp.success) {
+                    alert("결제가 완료되었습니다.");
+                } else {
+                    alert("결제에 실패했습니다. 에러: " + rsp.error_msg);
+                }
+            });
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert("결제 정보 요청에 실패했습니다: " + errorThrown);
+        });
+    }
+</script>
+</body>
+</html>

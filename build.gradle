@@ -1,0 +1,71 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.4'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.dragonwater'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+repositories {
+	mavenCentral()
+}
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// Spring Cloud Aws Starter : Spring boot와 AWS의 통합을 도와준다고 함
+	implementation 'io.awspring.cloud:spring-cloud-aws-starter:3.1.1'
+	// 여기서 S3 버킷에 접근할 수 있게 하는 라이브러리
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.767'
+
+
+	// XML 문서와 자바 객체 간 맵핑을 자동화 하는 jax-api (이거 굳이 필요한가?)
+	implementation 'javax.xml.bind:jaxb-api:2.3.1'
+
+	// JWT 토큰을 위한 라이브러리 추가
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5' // 핵심 JWT 인터페이스 & 빌더 API
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5' // 실제 JWT 구현체
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	// 메일 전송을 위한 라이브러리
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// 예제에서 확인을 위한 타임리프 추가 (필요하지 않다면 넣지 않아도 됨)
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	//webflux
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+
+	// 랜덤 생성해주는 라이브러리
+	implementation 'org.apache.commons:commons-lang3:3.14.0'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
