@@ -170,4 +170,11 @@ public interface ProductService {
      * @return
      */
     Products getProductByIdWithLock(Long id);
+
+    /**
+     * 이미 있던 상품을 id 값을 받아와서 그래도 상품을 바로 만드는 메소드
+     * @param id
+     * @return
+     */
+    Products copyProductById(Long id);
 }

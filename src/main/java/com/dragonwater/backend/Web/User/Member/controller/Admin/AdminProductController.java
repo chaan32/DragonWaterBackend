@@ -343,4 +343,9 @@ public class AdminProductController {
         }
     }
 
+    @PostMapping("/products/add/copy")
+    public ResponseEntity<?> productCopy(@RequestBody ProductCopyReqDto dto) {
+        Products copied = productService.copyProductById(dto.getProductId());
+        return ResponseEntity.ok().body(copied);
+    }
 }

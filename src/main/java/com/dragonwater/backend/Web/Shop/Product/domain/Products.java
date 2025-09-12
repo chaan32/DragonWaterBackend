@@ -108,6 +108,22 @@ public class Products {
                 .build();
     }
 
+    public static Products copy(Products products) {
+        return Products.builder()
+                .customerPrice(products.getCustomerPrice())
+                .businessPrice(products.getBusinessPrice())
+                .name(products.getName()+"-cpPt")
+                .discountPercent(products.getDiscountPercent())
+                .discountPrice(products.getDiscountPrice())
+                .category(products.getCategory())
+                .isRecommendation(false)
+                .isBest(false)
+                .isNew(false)
+                .stock(products.getStock())
+                .salesStatus(SalesStatus.ON_SALE)
+                .build();
+    }
+
     public Products edit(EditProductReqDto dto, ProductCategories category) {
         this.name = dto.getName();
         this.customerPrice = dto.getCustomerPrice();
