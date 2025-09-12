@@ -271,4 +271,10 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByIdWithPessimisticLock(id).orElseThrow(ProductNotFoundException::new);
     }
 
+    @Override
+    public Products copyProductById(Long id) {
+        Products copyTarget = this.getProductById(id);
+        Products copiedProduct = Products.copy(copyTarget);
+        return productRepository.save(copiedProduct);
+    }
 }

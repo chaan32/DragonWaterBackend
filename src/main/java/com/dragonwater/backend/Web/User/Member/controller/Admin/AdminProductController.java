@@ -343,4 +343,11 @@ public class AdminProductController {
         }
     }
 
+    @PostMapping("/products/add/copy")
+    public ResponseEntity<?> productCopy(@RequestBody ProductCopyReqDto dto) {
+        Products copied = productService.copyProductById(dto.getProductId());
+        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
+        map.put("message", "복제에 성공했습니다.");
+        return ResponseEntity.ok().body(map);
+    }
 }
