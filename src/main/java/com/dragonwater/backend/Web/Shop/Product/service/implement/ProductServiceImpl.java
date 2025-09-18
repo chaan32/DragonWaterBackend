@@ -308,6 +308,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Queue<ShowProductsResDto> getSpecializeProduct(Long memberId) {
-        return null;
+        Queue<ShowProductsResDto> dtos = new LinkedList<>();
+        for (SpecializeProducts specializeProducts : specializeProductRepository.findByMemberId(memberId)){
+            dtos.add(ShowProductsResDto.of(specializeProducts.getProduct()));
+        }
+        return dtos;
     }
 }

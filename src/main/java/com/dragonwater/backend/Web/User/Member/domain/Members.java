@@ -25,7 +25,7 @@ import java.util.Optional;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "MEMBER_TYPE")
 @SuperBuilder
-@ToString(exclude = {"orders", "comments", "productsInquiries", "generalInquiries", "cartItems", "claims"})
+@ToString(exclude = {"orders", "comments", "productsInquiries", "generalInquiries", "cartItems", "claims", "specializedProducts"})
 public abstract class Members {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

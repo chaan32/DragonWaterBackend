@@ -41,7 +41,7 @@ public class MemberInformDto {
     public static MemberInformDto of(Members member) {
         List<ProductMinimalInformResDto> specializeProduct = new LinkedList<>();
         for (SpecializeProducts products : member.getSpecializedProducts()) {
-            specializeProduct.add(ProductMinimalInformResDto.of(products.getProduct()));
+            specializeProduct.add(ProductMinimalInformResDto.adminOf(products));
         }
 
 

@@ -96,7 +96,7 @@ public class ShopProductController {
     public ResponseEntity<?> getSpecializeProducts(HttpServletRequest request) {
         Long memberId = jwtTokenProvider.getMemberId(request.getHeader("Authorization").substring(7));
         Queue<ShowProductsResDto> specializeProduct = productService.getSpecializeProduct(memberId);
-
+        log.info("size : {}", specializeProduct.size());
         return ResponseEntity.ok(specializeProduct);
 
     }

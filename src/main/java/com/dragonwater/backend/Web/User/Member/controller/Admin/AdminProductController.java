@@ -375,6 +375,7 @@ public class AdminProductController {
 
     @PostMapping("/products/injected/delete")
     public ResponseEntity<?> deletedInjectedProduct(@RequestParam Long specializeProductId) {
+        log.info("specializeProductId : {}", specializeProductId);
         productService.deleteInjectedProduct(specializeProductId);
         return ResponseEntity.ok().build();
     }
