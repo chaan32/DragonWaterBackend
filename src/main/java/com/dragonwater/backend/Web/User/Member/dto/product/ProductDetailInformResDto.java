@@ -6,9 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Data
@@ -30,6 +27,7 @@ public class ProductDetailInformResDto {
     private Boolean isNew;
     private Boolean isRecommendation;
     private Boolean isBest;
+    private Boolean isHide;
 
     public static ProductDetailInformResDto of(Products product) {
         ConcurrentHashMap<Long, String> ex = new ConcurrentHashMap<>();
@@ -53,6 +51,7 @@ public class ProductDetailInformResDto {
                 .isRecommendation(product.getIsRecommendation())
                 .isNew(product.getIsNew())
                 .isBest(product.getIsBest())
+                .isHide(product.getIsHide())
                 .build();
     }
 }
