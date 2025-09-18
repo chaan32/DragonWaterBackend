@@ -14,6 +14,7 @@ import com.dragonwater.backend.Web.Shop.Product.service.interf.CategoryService;
 import com.dragonwater.backend.Web.Shop.Product.service.interf.DescriptionService;
 import com.dragonwater.backend.Web.Shop.Product.service.interf.ProductService;
 import com.dragonwater.backend.Web.User.Member.dto.product.*;
+import com.dragonwater.backend.Web.User.Member.dto.search.HQInformResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -357,5 +358,25 @@ public class AdminProductController {
         ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
         map.put("message", "복제에 성공했습니다.");
         return ResponseEntity.ok().body(map);
+    }
+
+    @GetMapping("/products/name")
+    public ResponseEntity<List<ProductMinimalInformResDto>> searchHeadQuarters(@RequestParam String term) {
+        log.info("상품 검색 요청 : {}", term);
+        List<ProductMinimalInformResDto> productList = productService.getProductList(term);
+        return ResponseEntity.ok(productList);
+    }
+
+    @PostMapping("/products/inject")
+    public ResponseEntity<?> injectProductToMembers(@RequestBody InjectProductReqDto injectDto) {
+        productService.injectProduct(injectDto.getProductId(), injectDto.getMemberId());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/products/injected/delete")
+    public ResponseEntity<?> deletedInjectedProduct(@RequestParam Long specializeProductId) {
+        log.info("specializeProductId : {}", specializeProductId);
+        productService.deleteInjectedProduct(specializeProductId);
+        return ResponseEntity.ok().build();
     }
 }
