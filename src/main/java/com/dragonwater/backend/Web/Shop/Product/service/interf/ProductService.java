@@ -5,10 +5,8 @@ import com.dragonwater.backend.Web.Shop.Product.dto.description.ProductDescripti
 import com.dragonwater.backend.Web.Shop.Product.dto.expression.ExpressionAddReqDto;
 import com.dragonwater.backend.Web.Shop.Product.dto.expression.ExpressionDeleteReqDto;
 import com.dragonwater.backend.Web.Shop.Product.dto.product.*;
-import com.dragonwater.backend.Web.User.Member.dto.product.AddProductReqDto;
-import com.dragonwater.backend.Web.User.Member.dto.product.EditProductReqDto;
-import com.dragonwater.backend.Web.User.Member.dto.product.ProductDetailInformResDto;
-import com.dragonwater.backend.Web.User.Member.dto.product.ProductResDto;
+import com.dragonwater.backend.Web.User.Member.dto.product.*;
+import com.dragonwater.backend.Web.User.Member.dto.search.HQInformResDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -184,4 +182,31 @@ public interface ProductService {
      * @param hide  : true -> 숨김 처리 / false -> 숨기지 않음 처리
      */
     void settingHideOption(Long id, Boolean hide);
+
+    /**
+     * 이름으로 제품
+     * @param term 단어
+     * @return
+     */
+    List<ProductMinimalInformResDto> getProductList(String term);
+
+    /**
+     *  멤버에게 상품을 주입하는 메소드
+     * @param productId 상품 id
+     * @param memberId 멤버 id
+     */
+    void injectProduct(Long productId, Long memberId);
+
+    /**
+     *  멤버에게 주입된 상품을 삭제하는 메소드
+     * @param specializeProductId 그 특정 제품의 고유 id 값
+     */
+    void deleteInjectedProduct(Long specializeProductId);
+
+    /**
+     * 주입된 상품을 쇼핑몰에서 보여주는 객체를 반환하는 메소드
+     * @param memberId 멤버 id
+     * @return
+     */
+    Queue<ShowProductsResDto> getSpecializeProduct(Long memberId);
 }

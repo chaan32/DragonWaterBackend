@@ -91,4 +91,13 @@ public class ShopProductController {
         DisplayProductResDto displayProduct = productService.getDisplayProduct();
         return ResponseEntity.ok(displayProduct);
     }
+
+    @GetMapping("/products/specialize")
+    public ResponseEntity<?> getSpecializeProducts(HttpServletRequest request) {
+        Long memberId = jwtTokenProvider.getMemberId(request.getHeader("Authorization").substring(7));
+        Queue<ShowProductsResDto> specializeProduct = productService.getSpecializeProduct(memberId);
+
+        return ResponseEntity.ok(specializeProduct);
+
+    }
 }

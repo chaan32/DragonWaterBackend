@@ -10,20 +10,17 @@ import com.dragonwater.backend.Web.Shop.Product.dto.description.ProductDescripti
 import com.dragonwater.backend.Web.Shop.Product.dto.expression.ExpressionAddReqDto;
 import com.dragonwater.backend.Web.Shop.Product.dto.expression.ExpressionDeleteReqDto;
 import com.dragonwater.backend.Web.Shop.Product.dto.product.*;
-import com.dragonwater.backend.Web.Shop.Product.repository.DescriptionRepository;
-import com.dragonwater.backend.Web.Shop.Product.repository.ExpressionRepository;
-import com.dragonwater.backend.Web.Shop.Product.repository.ProductImageRepository;
-import com.dragonwater.backend.Web.Shop.Product.repository.ProductRepository;
+import com.dragonwater.backend.Web.Shop.Product.repository.*;
 import com.dragonwater.backend.Web.Shop.Product.service.interf.CategoryService;
 import com.dragonwater.backend.Web.Shop.Product.service.interf.DescriptionService;
 import com.dragonwater.backend.Web.Shop.Product.service.interf.ProductDisplayService;
 import com.dragonwater.backend.Web.Shop.Product.service.interf.ProductService;
 import com.dragonwater.backend.Web.Support.Comment.repository.CommentRepository;
 import com.dragonwater.backend.Web.Support.Inquiry.Specific.repository.SpecificInquiryRepository;
-import com.dragonwater.backend.Web.User.Member.dto.product.AddProductReqDto;
-import com.dragonwater.backend.Web.User.Member.dto.product.EditProductReqDto;
-import com.dragonwater.backend.Web.User.Member.dto.product.ProductDetailInformResDto;
-import com.dragonwater.backend.Web.User.Member.dto.product.ProductResDto;
+import com.dragonwater.backend.Web.User.Member.domain.Members;
+import com.dragonwater.backend.Web.User.Member.dto.product.*;
+import com.dragonwater.backend.Web.User.Member.service.MemberService;
+import jakarta.mail.util.LineOutputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,8 +43,7 @@ public class ProductServiceImpl implements ProductService {
     private final OrderItemsRepository orderItemsRepository;
     private final CommentRepository commentRepository;
     private final SpecificInquiryRepository specificInquiryRepository;
-
-
+    private final SpecializeProductRepository specializeProductRepository;
 
 
 
@@ -56,6 +52,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductDisplayService displayService;
     private final DescriptionService descriptionService;
     private final CategoryService categoryService;
+    private final MemberService memberService;
 
 
     @Override
@@ -283,5 +280,34 @@ public class ProductServiceImpl implements ProductService {
     public void settingHideOption(Long id, Boolean hide) {
         Products product = getProductById(id);
         product.setIsHide(hide);
+    }
+
+    @Override
+    public List<ProductMinimalInformResDto> getProductList(String term) {
+        List<ProductMinimalInformResDto> dtos = new LinkedList<>();
+        for (Products products : productRepository.findByNameContaining(term)){
+            dtos.add(ProductMinimalInformResDto.of(products));
+        }
+        return dtos;
+    }
+
+
+    @Transactional
+    @Override
+    public void injectProduct(Long productId, Long memberId) {
+        Members member = memberService.getMemberById(memberId);
+        Products product = this.getProductById(productId);
+        specializeProductRepository.save(SpecializeProducts.of(product, member));
+    }
+
+    @Transactional
+    @Override
+    public void deleteInjectedProduct(Long specializeProductId) {
+        specializeProductRepository.deleteById(specializeProductId);
+    }
+
+    @Override
+    public Queue<ShowProductsResDto> getSpecializeProduct(Long memberId) {
+        return null;
     }
 }

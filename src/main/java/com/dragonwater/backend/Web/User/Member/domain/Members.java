@@ -2,6 +2,7 @@ package com.dragonwater.backend.Web.User.Member.domain;
 
 import com.dragonwater.backend.Web.Shop.Cart.domain.CartItems;
 import com.dragonwater.backend.Web.Order.domain.Orders;
+import com.dragonwater.backend.Web.Shop.Product.domain.SpecializeProducts;
 import com.dragonwater.backend.Web.Support.Claim.domain.Claims;
 import com.dragonwater.backend.Web.Support.Comment.domain.Comments;
 import com.dragonwater.backend.Web.Support.Inquiry.General.domain.GeneralInquiries;
@@ -80,6 +81,11 @@ public abstract class Members {
     // 카트 추가하기
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItems> cartItems;
+
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SpecializeProducts> specializedProducts = new ArrayList<>();
+
 
     public Optional<CartItems> findCartItem(Long productId) {
         return this.cartItems.stream()

@@ -2,7 +2,10 @@ package com.dragonwater.backend.Web.User.Member.dto.search;
 
 import com.dragonwater.backend.Web.Order.domain.Orders;
 import com.dragonwater.backend.Web.Order.dto.OrderMembersResDto;
+import com.dragonwater.backend.Web.Shop.Product.domain.Products;
+import com.dragonwater.backend.Web.Shop.Product.domain.SpecializeProducts;
 import com.dragonwater.backend.Web.User.Member.domain.*;
+import com.dragonwater.backend.Web.User.Member.dto.product.ProductMinimalInformResDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -21,6 +24,8 @@ public class MemberInformDto {
     private String postalCode;
     private String phone;
     private String email;
+    private List<ProductMinimalInformResDto> specializeProduct;
+
 
 
     private HeadQuartersResDto headQuartersInform;
@@ -34,6 +39,12 @@ public class MemberInformDto {
     private BigDecimal totalAmount;
 
     public static MemberInformDto of(Members member) {
+        List<ProductMinimalInformResDto> specializeProduct = new LinkedList<>();
+        for (SpecializeProducts products : member.getSpecializedProducts()) {
+            specializeProduct.add(ProductMinimalInformResDto.of(products.getProduct()));
+        }
+
+
         if (member instanceof AdminMembers) {
             return null;
         }
@@ -52,6 +63,7 @@ public class MemberInformDto {
             return MemberInformDto.builder()
                     .id(member.getId())
                     .loginId(member.getLoginId())
+                    .specializeProduct(specializeProduct)
                     .address(member.getAddress())
                     .detailAddress(member.getDetailAddress())
                     .postalCode((member.getZipCode()))
@@ -72,6 +84,7 @@ public class MemberInformDto {
                     .detailAddress(member.getDetailAddress())
                     .postalCode((member.getZipCode()))
                     .email(member.getEmail())
+                    .specializeProduct(specializeProduct)
                     .phone(member.getPhone())
                     .branchResDto(branchMembers)
                     .createdAt(member.getCreatedAt())
@@ -90,6 +103,7 @@ public class MemberInformDto {
                     .email(member.getEmail())
                     .phone(member.getPhone())
                     .headQuartersInform(headQuartersResDto)
+                    .specializeProduct(specializeProduct)
                     .createdAt(member.getCreatedAt())
                     .updatedAt(member.getUpdatedAt())
                     .totalAmount(ta)
