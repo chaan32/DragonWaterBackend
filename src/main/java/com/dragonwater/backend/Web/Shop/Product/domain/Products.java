@@ -67,6 +67,10 @@ public class Products {
     @Column(name = "is_new", nullable = false)
     private Boolean isNew;
 
+    // 상품의 숨김 여부
+    @Column(name = "is_hide", nullable = false)
+    private Boolean isHide;
+
     // ㅍㅕㅇㅈㅓㅁ
     private Float rating;
 
@@ -103,6 +107,7 @@ public class Products {
                 .isRecommendation(false)
                 .isBest(false)
                 .isNew(false)
+                .isHide(false)
                 .stock(dto.getStock())
                 .salesStatus(SalesStatus.ON_SALE)
                 .build();
@@ -119,6 +124,7 @@ public class Products {
                 .isRecommendation(false)
                 .isBest(false)
                 .isNew(false)
+                .isHide(false)
                 .stock(products.getStock())
                 .salesStatus(SalesStatus.ON_SALE)
                 .build();
@@ -194,5 +200,12 @@ public class Products {
     public void addStock(Integer quantity) {
         this.stock = quantity;
         this.salesStatus = SalesStatus.ON_SALE;
+    }
+
+    public void setIsHide(Boolean hide){
+        this.isHide = hide;
+        if (this.isHide){
+            this.salesStatus = SalesStatus.DISCONTINUED;
+        }
     }
 }

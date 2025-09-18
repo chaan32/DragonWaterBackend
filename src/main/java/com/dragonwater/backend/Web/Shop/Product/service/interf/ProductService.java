@@ -177,4 +177,11 @@ public interface ProductService {
      * @return
      */
     Products copyProductById(Long id);
+
+    /**
+     * 상품을 숨기는 메소드
+     * @param id : 상품 id
+     * @param hide  : true -> 숨김 처리 / false -> 숨기지 않음 처리
+     */
+    void settingHideOption(Long id, Boolean hide);
 }

@@ -268,9 +268,17 @@ public class AdminProductController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/products/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
+    @PutMapping("/products/{id}/hide")
+    public ResponseEntity<?> hideProduct(@PathVariable Long id) {
+        // 숨김 처리 하기
+        productService.settingHideOption(id, true);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/products/{id}/show")
+    public ResponseEntity<?> showProduct(@PathVariable Long id) {
+        // 보임 처리 하기
+        productService.settingHideOption(id, false);
         return ResponseEntity.ok().build();
     }
 

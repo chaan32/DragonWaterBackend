@@ -277,4 +277,11 @@ public class ProductServiceImpl implements ProductService {
         Products copiedProduct = Products.copy(copyTarget);
         return productRepository.save(copiedProduct);
     }
+
+    @Transactional
+    @Override
+    public void settingHideOption(Long id, Boolean hide) {
+        Products product = getProductById(id);
+        product.setIsHide(hide);
+    }
 }
