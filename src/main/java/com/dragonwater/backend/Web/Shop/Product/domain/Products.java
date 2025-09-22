@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -44,6 +45,9 @@ public class Products {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductExpression> expressions;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SpecializeProducts> specializedMembers = new ArrayList<>();
+
 
     // 상품에 대한 진짜 정보
     @Column(name = "name", nullable = false)
@@ -66,6 +70,10 @@ public class Products {
     private Boolean isRecommendation;
     @Column(name = "is_new", nullable = false)
     private Boolean isNew;
+
+    // 상품의 숨김 여부
+    @Column(name = "is_hide", nullable = false)
+    private Boolean isHide;
 
     // ㅍㅕㅇㅈㅓㅁ
     private Float rating;
@@ -103,6 +111,7 @@ public class Products {
                 .isRecommendation(false)
                 .isBest(false)
                 .isNew(false)
+                .isHide(false)
                 .stock(dto.getStock())
                 .salesStatus(SalesStatus.ON_SALE)
                 .build();
@@ -119,6 +128,7 @@ public class Products {
                 .isRecommendation(false)
                 .isBest(false)
                 .isNew(false)
+                .isHide(false)
                 .stock(products.getStock())
                 .salesStatus(SalesStatus.ON_SALE)
                 .build();
@@ -194,5 +204,12 @@ public class Products {
     public void addStock(Integer quantity) {
         this.stock = quantity;
         this.salesStatus = SalesStatus.ON_SALE;
+    }
+
+    public void setIsHide(Boolean hide){
+        this.isHide = hide;
+        if (this.isHide){
+            this.salesStatus = SalesStatus.DISCONTINUED;
+        }
     }
 }
