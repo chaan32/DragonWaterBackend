@@ -22,11 +22,11 @@ import java.util.Optional;
 public class OrderNumberGeneratorService {
 
     private final OrderSequenceRepository orderSequenceRepository;
-    private static final String ORDER_PREFIX = "ORDTest";
+    private static final String ORDER_PREFIX = "ORD";
     private static final DateTimeFormatter YEAR_MONTH_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM");
 
     private final BatchSequenceRepository batchSequenceRepository;
-    private static final String BATCH_PREFIX = "HBPTest";
+    private static final String BATCH_PREFIX = "HBP";
 
     /**
      * 새로운 주문 번호를 생성합니다.
@@ -58,6 +58,7 @@ public class OrderNumberGeneratorService {
         log.info("생성된 주문 번호: {}", orderNumber);
         return orderNumber;
     }
+
     public String generateBatchNumber() {
         LocalDateTime now = LocalDateTime.now();
         String yearMonth = now.format(YEAR_MONTH_FORMATTER);

@@ -26,7 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -204,20 +206,39 @@ public class OrderServiceImpl implements OrderService {
 
 
     private String generateOrderNumber() {
-        final String ORDER_PREFIX = "ORD-TEST";
+        final String ORDER_PREFIX = "DR";
         LocalDate currentDate = LocalDate.now();
-        String uuid = String.valueOf(UUID.randomUUID());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+        String formattedDate = currentDate.format(formatter);
+        String uuid = this.generateOurRandomString();
         return ORDER_PREFIX
-                + currentDate.getYear()+currentDate.getMonthValue()+currentDate.getDayOfMonth()
-                + uuid.substring(10);
+                + formattedDate
+                + "#"
+                + uuid;
     }
 
     private String generateBatchOrderNumber() {
-        final String BATCH_ORDER_PREFIX = "BATCH-TEST";
+        final String BATCH_ORDER_PREFIX = "DR*";
         LocalDate currentDate = LocalDate.now();
-        String uuid = String.valueOf(UUID.randomUUID());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+        String formattedDate = currentDate.format(formatter);
+        String uuid = this.generateOurRandomString();
         return BATCH_ORDER_PREFIX
-                + currentDate.getYear()+currentDate.getMonthValue()+currentDate.getDayOfMonth()
-                + uuid.substring(10);
+                + formattedDate
+                + "#"
+                + uuid;
+    }
+    private String generateOurRandomString(){
+        final String CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(8);
+
+        for (int i = 0; i < 8; i++) {
+            int randomIndex = random.nextInt(CHARS.length());
+
+            sb.append(CHARS.charAt(randomIndex));
+        }
+
+        return sb.toString();
     }
 }
