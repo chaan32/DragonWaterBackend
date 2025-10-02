@@ -12,9 +12,11 @@ import com.dragonwater.backend.Web.Order.service.interf.OrderService;
 import com.dragonwater.backend.Web.Shipment.domain.Shipments;
 import com.dragonwater.backend.Web.Shipment.dto.SameWithRecipientReqDto;
 import com.dragonwater.backend.Web.User.Member.domain.BranchMembers;
+import com.dragonwater.backend.Web.User.Member.domain.IndividualMembers;
 import com.dragonwater.backend.Web.User.Member.domain.Members;
 import com.dragonwater.backend.Web.User.Member.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -44,7 +46,7 @@ public class OrderController {
 
 
 
-    private final JwtTokenProvider provider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/recipient/same/{userId}")
     public ResponseEntity<?> getRecipientInform(@PathVariable Long userId) {
@@ -55,7 +57,7 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<?> order(@RequestBody OrderReqDto orderDto) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         Orders order = orderService.createOrder(orderDto);
-        String productName = getProductName(order);
+
 
         Members member = order.getMember();
         if (member instanceof BranchMembers) {
@@ -63,6 +65,15 @@ public class OrderController {
             HashMap<String, String> vars = orderService.makeVars(order);
             kakaoNotiService.requestSend(vars, false);
             kakaoNotiService.requestSend(vars, true);
+        }
+        else if (member instanceof IndividualMembers){
+            HashMap<String, String> vars = orderService.makeVars(order);
+            kakaoNotiService.requestSend(vars, false);
+            kakaoNotiService.requestSend(vars, true);
+
+            orderService.subPoints(order);
+            orderService.addPoints(order);
+
         }
         return ResponseEntity.ok(PreOrderResponseDto.of(order));
     }
@@ -81,6 +92,19 @@ public class OrderController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("결제 중 오류가 발생했습니다.");
         }
+    }
+    @GetMapping("/point")
+    public BigDecimal getMyPoint(HttpServletRequest request){
+
+        Long memberId = jwtTokenProvider.getMemberId(request.getHeader("Authorization").substring(7));
+
+        Members member = memberService.getMemberById(memberId);
+
+        if (member instanceof IndividualMembers){
+            IndividualMembers member1 = (IndividualMembers) member;
+            return member1.getMemberShipPoints();
+        }
+        return BigDecimal.ZERO;
     }
 
     private String getProductName(Orders orders) {

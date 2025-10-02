@@ -205,6 +205,8 @@ public class PaymentController {
             HashMap<String, String> vars = orderService.makeVars(orders);
             kakaoNotiService.requestSend(vars, false);
             kakaoNotiService.requestSend(vars, true);
+            orderService.subPoints(orders);
+            orderService.addPoints(orders);
         } else {
             response.sendRedirect("https://dragonwater.co.kr/payment/result?status=fail&orderId=" +
                     URLEncoder.encode(orderId == null ? "" : orderId, StandardCharsets.UTF_8) +

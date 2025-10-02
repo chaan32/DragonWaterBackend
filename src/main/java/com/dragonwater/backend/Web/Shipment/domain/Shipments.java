@@ -3,27 +3,29 @@ package com.dragonwater.backend.Web.Shipment.domain;
 import com.dragonwater.backend.Web.Order.domain.Orders;
 import com.dragonwater.backend.Web.Shipment.dto.ShipmentReqDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.query.Order;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter @Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class Shipments {
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 
     // 주문과 배송 정보의 1:1 맵핑
     @OneToOne(mappedBy = "shipment")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Orders order;
 
 

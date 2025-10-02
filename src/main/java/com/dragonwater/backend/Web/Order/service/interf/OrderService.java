@@ -122,4 +122,16 @@ public interface OrderService {
      * @return
      */
     HashMap<String, String> makeVars(Orders orders);
+
+    /**
+     * 포인트 더하기
+     * @param orders
+     */
+    void addPoints(Orders orders);
+
+    /**
+     * 포인트 쓰기
+     * @param orders
+     */
+    void subPoints(Orders orders);
 }

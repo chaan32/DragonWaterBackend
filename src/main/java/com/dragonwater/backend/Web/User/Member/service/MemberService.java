@@ -1,5 +1,6 @@
 package com.dragonwater.backend.Web.User.Member.service;
 
+import com.dragonwater.backend.Web.Order.domain.Orders;
 import com.dragonwater.backend.Web.User.Member.domain.*;
 import com.dragonwater.backend.Web.User.Member.dto.register.BranchMbRegReqDto;
 import com.dragonwater.backend.Web.User.Member.dto.register.HeadQuarterMbRegReqDto;
@@ -109,4 +110,6 @@ public interface MemberService {
      * @return
      */
     Members resetPassword(Members members, String tempPassword);
+
+
 }

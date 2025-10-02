@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 public class IndividualsResDto {
     private String name;
-    private Integer memberShipPoints;
+    private BigDecimal memberShipPoints;
 
     public static IndividualsResDto of(IndividualMembers members) {
         return IndividualsResDto.builder()

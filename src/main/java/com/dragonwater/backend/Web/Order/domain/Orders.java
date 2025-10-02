@@ -17,14 +17,17 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter @Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true) // id만 사용
+@ToString(onlyExplicitlyIncluded = true)
 public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(unique = true, name = "order_number", nullable = false)
@@ -39,6 +42,8 @@ public class Orders {
     // 배송 정보 1:1로 연결 됨
     @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "shipment_id", nullable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Shipments shipment;
 
     // 주문 품목과 1:N으로 연결
