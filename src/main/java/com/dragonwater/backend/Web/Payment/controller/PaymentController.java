@@ -3,6 +3,7 @@ package com.dragonwater.backend.Web.Payment.controller;
 import com.dragonwater.backend.Config.Common.dto.ApiResponse;
 import com.dragonwater.backend.Config.Jwt.JwtTokenProvider;
 import com.dragonwater.backend.Config.Redis.RedisDao;
+import com.dragonwater.backend.Web.KakaoNotify.service.KakaoNotiService;
 import com.dragonwater.backend.Web.Notify.service.NotifyService;
 import com.dragonwater.backend.Web.Order.domain.OrderItems;
 import com.dragonwater.backend.Web.Order.domain.Orders;
@@ -37,6 +38,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +53,7 @@ public class PaymentController {
     // 인터페이스 구현 완
     private final OrderService orderService;
     private final NotifyService notifyService;
+    private final KakaoNotiService kakaoNotiService;
     private final RedisDao redisDao;
 
     // 인터페이스 구현 미완
@@ -191,7 +194,6 @@ public class PaymentController {
         String resultCode = json.path("resultCode").asText();
         String resultMsg  = json.path("resultMsg").asText();
         String status     = json.path("status").asText();
-        log.info("resultCode : {} resultMsg : {}, status : {}",resultCode,resultMsg,status);
         if ("0000".equals(resultCode) && "paid".equals(status)) {
             orderService.payByOrderNumber(orderId);
             response.sendRedirect("https://dragonwater.co.kr/payment/result?status=success&orderId=" +
@@ -200,11 +202,9 @@ public class PaymentController {
             // 여기서 주문 완료 문자 발송
             log.info("order Id : {}", orderId);
             Orders orders = orderService.getOrdersByOrderNumber(orderId);
-            String productName = getProductName(orders);
-            log.info("------ 지금 문자 보낸다 -------");
-            notifyService.notifySuccessOrderToCustomerBySMS(orders.getMember().getPhone(), productName);
-            notifyService.notifyOrderToAdminBySMS(orders.getMember().getRole());
-            log.info("------ 지금 문자 보냈다 -------");
+            HashMap<String, String> vars = orderService.makeVars(orders);
+            kakaoNotiService.requestSend(vars, false);
+            kakaoNotiService.requestSend(vars, true);
         } else {
             response.sendRedirect("https://dragonwater.co.kr/payment/result?status=fail&orderId=" +
                     URLEncoder.encode(orderId == null ? "" : orderId, StandardCharsets.UTF_8) +

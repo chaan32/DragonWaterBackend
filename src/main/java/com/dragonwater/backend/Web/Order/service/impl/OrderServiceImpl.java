@@ -16,6 +16,7 @@ import com.dragonwater.backend.Web.Payment.repository.BatchPaymentRepository;
 import com.dragonwater.backend.Web.Shipment.domain.Shipments;
 import com.dragonwater.backend.Web.Shop.Product.domain.Products;
 import com.dragonwater.backend.Web.Shop.Product.service.interf.ProductService;
+import com.dragonwater.backend.Web.User.Member.domain.BranchMembers;
 import com.dragonwater.backend.Web.User.Member.domain.HeadQuarterMembers;
 import com.dragonwater.backend.Web.User.Member.domain.Members;
 import com.dragonwater.backend.Web.User.Member.service.MemberService;
@@ -27,7 +28,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.security.SecureRandom;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -202,6 +207,66 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(readOnly = true)
     public BatchPayment getBatchPaymentByOrderNumber(String orderNumber) {
         return batchPaymentRepository.findByOrderNumber(orderNumber).orElseThrow(() -> new OrderNotFoundException());
+    }
+
+    public HashMap<String, String> makeVars(Orders orders){
+        HashMap<String, String> vars = new HashMap<>();
+        vars.put("phone",makePhoneNumber(orders));
+        vars.put("name",makeName(orders));
+        vars.put("orderNumber",orders.getOrderNumber());
+        vars.put("productsName", getProductName(orders));
+        vars.put("orderDate", makeOrderDate(orders.getCreatedAt()));
+        vars.put("deliveryAddress",makeDeliveryAddress(orders));
+        vars.put("orderPrice", makeOrderPrice(orders));
+        return vars;
+    }
+    private String makePhoneNumber(Orders orders){
+        Members member = orders.getMember();
+        if (member instanceof BranchMembers){
+            BranchMembers branchMembers = (BranchMembers) member;
+            return branchMembers.getManagerPhone();
+        }
+        else {
+            return member.getPhone();
+        }
+    }
+    private String getProductName(Orders orders) {
+        List<OrderItems> items = orders.getItems();
+        String productName = items.get(0).getProduct().getName();
+        if (items.size() > 1) {
+            productName += "외 " + (items.size() - 1) + "종";
+        }
+        return productName;
+    }
+    private String makeName(Orders orders){
+        Members member = orders.getMember();
+        if (member instanceof BranchMembers){
+            BranchMembers branchMembers = (BranchMembers) member;
+            return member.getName()+"-"+branchMembers.getBranchName();
+        }
+        else {
+            return member.getName();
+        }
+    }
+
+
+    private String makeOrderDate(LocalDateTime orderDate){
+        ZonedDateTime utcDateTime = orderDate.atZone(ZoneId.of("UTC"));
+        ZonedDateTime kstDateTime = utcDateTime.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
+        return kstDateTime.format(formatter);
+    }
+
+    private String makeDeliveryAddress(Orders orders) {
+        Shipments shipment = orders.getShipment();
+        return shipment.getAddress() + " " + shipment.getDetailAddress();
+    }
+
+    private String makeOrderPrice(Orders orders) {
+        DecimalFormat formatter = new DecimalFormat("###,###");
+        BigDecimal totalPrice = orders.getTotalPrice();
+        return formatter.format(totalPrice);
     }
 
 

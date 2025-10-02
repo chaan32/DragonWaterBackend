@@ -7,6 +7,7 @@ import com.dragonwater.backend.Web.Payment.dto.HQPaymentDto;
 import com.dragonwater.backend.Web.Payment.dto.HeadquartersPaymentReqDto;
 import org.hibernate.query.Order;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -115,6 +116,10 @@ public interface OrderService {
      */
     BatchPayment getBatchPaymentByOrderNumber(String orderNumber);
 
-
-
+    /**
+     * 오더 객체를 가지고 카카오톡 알림톡에 필요한 변수를 생성하는 메소드
+     * @param orders 오더 객체
+     * @return
+     */
+    HashMap<String, String> makeVars(Orders orders);
 }

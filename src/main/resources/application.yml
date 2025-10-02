@@ -72,3 +72,12 @@ naver:
     phone: ${NAVER_SMS_PHONE}
   access-key: ${NAVER_ACCESS_KEY}
   secret-key: ${NAVER_SECRET_KEY}
+
+ppurio:
+  api:
+    key: ${PPURIO_API_KEY}
+  account: ${PPURIO_ACCOUNT}
+  sender-profile: ${PPURIO_SENDER_PROFILE}
+  template-code:
+    to-customer: ${PPURIO_TEMPLATE_CODE_TO_CUSTOMER}
+    to-admin: ${PPURIO_TEMPLATE_CODE_TO_ADMIN}
