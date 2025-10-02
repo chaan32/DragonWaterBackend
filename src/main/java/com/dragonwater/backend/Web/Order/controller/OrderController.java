@@ -1,6 +1,7 @@
 package com.dragonwater.backend.Web.Order.controller;
 
 import com.dragonwater.backend.Config.Jwt.JwtTokenProvider;
+import com.dragonwater.backend.Web.KakaoNotify.service.KakaoNotiService;
 import com.dragonwater.backend.Web.Notify.service.NotifyService;
 import com.dragonwater.backend.Web.Order.domain.OrderItems;
 import com.dragonwater.backend.Web.Order.domain.Orders;
@@ -8,6 +9,7 @@ import com.dragonwater.backend.Web.Order.dto.OrderReqDto;
 import com.dragonwater.backend.Web.Order.dto.OrdersClaimResDto;
 import com.dragonwater.backend.Web.Order.dto.PreOrderResponseDto;
 import com.dragonwater.backend.Web.Order.service.interf.OrderService;
+import com.dragonwater.backend.Web.Shipment.domain.Shipments;
 import com.dragonwater.backend.Web.Shipment.dto.SameWithRecipientReqDto;
 import com.dragonwater.backend.Web.User.Member.domain.BranchMembers;
 import com.dragonwater.backend.Web.User.Member.domain.Members;
@@ -20,8 +22,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -32,6 +39,8 @@ public class OrderController {
     private final MemberService memberService;
     private final OrderService orderService;
     private final NotifyService notifyService;
+
+    private final KakaoNotiService kakaoNotiService;
 
 
 
@@ -50,8 +59,10 @@ public class OrderController {
 
         Members member = order.getMember();
         if (member instanceof BranchMembers) {
-            notifyService.notifySuccessOrderToCustomerBySMS(order.getMember().getPhone(), productName);
-            notifyService.notifyOrderToAdminBySMS(order.getMember().getRole());
+
+            HashMap<String, String> vars = orderService.makeVars(order);
+            kakaoNotiService.requestSend(vars, false);
+            kakaoNotiService.requestSend(vars, true);
         }
         return ResponseEntity.ok(PreOrderResponseDto.of(order));
     }
@@ -79,5 +90,43 @@ public class OrderController {
             productName += "외 " + (items.size() - 1) + "종";
         }
         return productName;
+    }
+
+    private HashMap<String, String> makeVars(Orders orders) {
+        HashMap<String, String> vars = new HashMap<>();
+        BranchMembers member = (BranchMembers) orders.getMember();
+        vars.put("phone",member.getManagerPhone());
+        vars.put("name",member.getName()+"-"+member.getBranchName());
+        vars.put("orderNumber",orders.getOrderNumber());
+        vars.put("productsName", makeProductsName(orders));
+        vars.put("orderDate", makeOrderDate(orders.getCreatedAt()));
+        vars.put("deliveryAddress",makeDeliveryAddress(orders));
+        vars.put("orderPrice", makeOrderPrice(orders));
+        return vars;
+    }
+
+    private String makeProductsName(Orders orders) {
+        List<OrderItems> items = orders.getItems();
+        int size = items.size();
+        String productName = orders.getItems().get(0).getProduct().getName();
+        if (size > 1){
+            productName += "외 "+(size-1)+"종";
+        }
+        return productName;
+    }
+    private String makeOrderDate(LocalDateTime orderDate){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
+        return orderDate.format(formatter);
+    }
+
+    private String makeDeliveryAddress(Orders orders) {
+        Shipments shipment = orders.getShipment();
+        return shipment.getAddress() + " " + shipment.getDetailAddress();
+    }
+
+    private String makeOrderPrice(Orders orders) {
+        DecimalFormat formatter = new DecimalFormat("###,###");
+        BigDecimal totalPrice = orders.getTotalPrice();
+        return formatter.format(totalPrice);
     }
 }
