@@ -66,7 +66,7 @@ public class OrderController {
             kakaoNotiService.requestSend(vars, false);
             kakaoNotiService.requestSend(vars, true);
         }
-        else if (member instanceof IndividualMembers){
+        else if (member instanceof IndividualMembers && order.getTotalPrice().equals(BigDecimal.ZERO)){
             HashMap<String, String> vars = orderService.makeVars(order);
             kakaoNotiService.requestSend(vars, false);
             kakaoNotiService.requestSend(vars, true);
