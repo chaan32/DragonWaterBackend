@@ -18,6 +18,7 @@ import com.dragonwater.backend.Web.Shop.Product.domain.Products;
 import com.dragonwater.backend.Web.Shop.Product.service.interf.ProductService;
 import com.dragonwater.backend.Web.User.Member.domain.BranchMembers;
 import com.dragonwater.backend.Web.User.Member.domain.HeadQuarterMembers;
+import com.dragonwater.backend.Web.User.Member.domain.IndividualMembers;
 import com.dragonwater.backend.Web.User.Member.domain.Members;
 import com.dragonwater.backend.Web.User.Member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -220,6 +221,29 @@ public class OrderServiceImpl implements OrderService {
         vars.put("orderPrice", makeOrderPrice(orders));
         return vars;
     }
+
+    @Override
+    @Transactional
+    public void addPoints(Orders orders) {
+        Members member = orders.getMember();
+        if (member instanceof IndividualMembers){
+            IndividualMembers member1 = (IndividualMembers) member;
+            log.info("will add : {}", orders.getProductPrice());
+            member1.addPoints(orders.getProductPrice());
+            log.info("point : {}", member1.getMemberShipPoints());
+        }
+    }
+
+    @Override
+    @Transactional
+    public void subPoints(Orders orders) {
+        Members member = orders.getMember();
+        if (member instanceof IndividualMembers){
+            IndividualMembers member1 = (IndividualMembers) member;
+            member1.subPoints(orders.getPointDiscountPrice());
+        }
+    }
+
     private String makePhoneNumber(Orders orders){
         Members member = orders.getMember();
         if (member instanceof BranchMembers){

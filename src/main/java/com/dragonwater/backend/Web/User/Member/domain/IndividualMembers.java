@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Entity
@@ -22,7 +24,7 @@ import java.util.List;
 public class IndividualMembers extends Members{
 
     @Builder.Default
-    private Integer memberShipPoints = 0;
+    private BigDecimal memberShipPoints = BigDecimal.ZERO;
 
     public static IndividualMembers of(IndividualMbRegReqDto dto, String encodedPassword) {
         return IndividualMembers.builder()
@@ -36,5 +38,15 @@ public class IndividualMembers extends Members{
                 .role(Role.INDIVIDUAL) // 역할 설정
                 .zipCode(dto.getPostalCode())
                 .build();
+    }
+    public void addPoints(BigDecimal productPrice){
+
+        BigDecimal result = productPrice.multiply(BigDecimal.valueOf(0.05));
+        BigDecimal intResult = result.setScale(0, RoundingMode.DOWN);
+
+        this.memberShipPoints = this.memberShipPoints.add(intResult);
+    }
+    public void subPoints(BigDecimal memberShipPoints){
+        this.memberShipPoints = this.memberShipPoints.subtract(memberShipPoints);
     }
 }

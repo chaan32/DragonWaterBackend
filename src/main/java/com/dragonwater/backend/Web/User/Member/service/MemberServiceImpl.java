@@ -3,6 +3,7 @@ package com.dragonwater.backend.Web.User.Member.service;
 import com.dragonwater.backend.Config.CloudStorage.CloudStorageService;
 import com.dragonwater.backend.Config.Exception.New.Exception.specific.NotFound.MemberNotFoundException;
 import com.dragonwater.backend.Config.Exception.New.Exception.specific.Failed.SignUpFailedException;
+import com.dragonwater.backend.Web.Order.domain.Orders;
 import com.dragonwater.backend.Web.User.Member.domain.*;
 import com.dragonwater.backend.Web.User.Member.dto.register.BranchMbRegReqDto;
 import com.dragonwater.backend.Web.User.Member.dto.register.HeadQuarterMbRegReqDto;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -152,7 +154,6 @@ public class MemberServiceImpl implements MemberService {
         members.setLoginPw(encoder.encode(tempPassword));
         return memberRepository.save(members);
     }
-
 
 
     // 이름으로 본사 찾아오기
